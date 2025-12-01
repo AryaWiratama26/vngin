@@ -7,7 +7,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
 from typing import Literal
 import os
-
+import csv
 
 
 CHROME_DRIVER_PATH = "/usr/bin/chromedriver"
@@ -18,7 +18,7 @@ OP.add_argument("--disable-blink-features=AutomationControlled")
 
 OP.add_argument("--no-sandbox")
 OP.add_argument("--disable-dev-shm-usage")
-OP.add_argument("user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36")
+OP.add_argument("user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36")
 
 service = Service(executable_path=CHROME_DRIVER_PATH)
 
@@ -29,10 +29,19 @@ class TiktokBot:
     def __init__(self):
         pass
 
-    def scrape(self, keyword: str, n):
+
+    def __save_to_csv(self, accounts, likes, comments, captions, video_links, filenames: str):
+        with open(f"{filenames}.csv", "a") as f:
+            writer = csv.writer(f)
+            writer.writerow([accounts, likes, comments, captions, video_links])
+            
+
+    def scrape(self, keyword: str, n: int, filenames: str):
         driver.get(f"http://tiktok.com/search?q={keyword}")
         time.sleep(5)
 
+        start = 0
+        end = 40
 
         try:
             cards = WebDriverWait(driver, 20).until(
@@ -70,6 +79,10 @@ class TiktokBot:
 
 
                     print(likes.text, comments.text, captions.text, video_links.text, account_names.text)
+
+                    self.__save_to_csv(account_names.text, likes.text, comments.text, captions.text, video_links.text, filenames)
+
+
                 except Exception as e:
                     print(e)
 
@@ -80,6 +93,9 @@ class TiktokBot:
 
                 time.sleep(5)
                 driver.back()
+                driver.execute_script(f"window.scrollTo({start}, {end});")
+                start += 40
+                end += 40
                 time.sleep(5)
 
 
