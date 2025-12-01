@@ -40,8 +40,6 @@ class TiktokBot:
         driver.get(f"http://tiktok.com/search?q={keyword}")
         time.sleep(5)
 
-        start = 0
-        end = 40
 
         try:
             cards = WebDriverWait(driver, 20).until(
@@ -53,6 +51,7 @@ class TiktokBot:
 
                 cards[i].click()
                 try:
+
 
 
                     likes = WebDriverWait(driver, 20).until(
@@ -93,11 +92,9 @@ class TiktokBot:
 
                 time.sleep(5)
                 driver.back()
-                driver.execute_script(f"window.scrollTo({start}, {end});")
-                start += 40
-                end += 40
                 time.sleep(5)
 
+            
 
         except Exception as e:
 
