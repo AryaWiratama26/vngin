@@ -40,7 +40,7 @@ class TiktokBot:
             )
 
             i = 0
-            while i <= n:
+            while i < n:
 
                 cards[i].click()
                 try:
@@ -59,17 +59,17 @@ class TiktokBot:
                     )
 
 
-                    # account_names = WebDriverWait(driver, 20).until(
-                    #     EC.presence_of_element_located((By.CSS_SELECTOR, "div[data-e2e='browse-username']"))
-                    # )
+                    account_names = WebDriverWait(driver, 20).until(
+                        EC.presence_of_element_located((By.CSS_SELECTOR, "span[data-e2e='browse-username']"))
+                    )
 
 
                     video_links = WebDriverWait(driver, 20).until(
                         EC.presence_of_element_located((By.CSS_SELECTOR, "p[data-e2e='browse-video-link']"))
                     )
-                    
 
-                    print(likes.text, comments.text, captions.text, video_links.text)
+
+                    print(likes.text, comments.text, captions.text, video_links.text, account_names.text)
                 except Exception as e:
                     print(e)
 
